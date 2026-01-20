@@ -1,0 +1,38 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold mb-4">Welcome to CB Image</h1>
+    <p class="text-xl text-gray-600 mb-8">Subscription-based Image Management Platform</p>
+
+    <% if user_signed_in? %>
+      <div class="space-x-4">
+        <%= link_to "Dashboard", dashboard_path, class: "btn btn-primary" %>
+        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-secondary" %>
+      </div>
+    <% else %>
+      <div class="space-x-4">
+        <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @promotions.any? %>
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold mb-6">Active Promotions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @promotions.each do |promotion| %>
+          <div class="border rounded-lg p-6 shadow-sm">
+            <h3 class="text-xl font-semibold mb-2"><%= promotion.code %></h3>
+            <p class="text-gray-600 mb-4"><%= promotion.description %></p>
+            <p class="text-lg font-bold text-green-600">
+              <%= promotion.discount_type == 'percentage' ? "#{promotion.discount_value}% OFF" : "$#{promotion.discount_value} OFF" %>
+            </p>
+            <p class="text-sm text-gray-500 mt-2">
+              Valid until <%= promotion.end_date.strftime('%B %d, %Y') %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

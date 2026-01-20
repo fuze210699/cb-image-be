@@ -1,0 +1,72 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: cb_image_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: cb_image_be_development
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - cb_image_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: cb_image_web
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    restart: unless-stopped
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      MONGODB_URI: mongodb://admin:admin123@mongodb:27017/cb_image_be_development?authSource=admin
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - cb_image_network
+    stdin_open: true
+    tty: true
+
+  # MailCatcher for email testing
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    container_name: cb_image_mailcatcher
+    restart: unless-stopped
+    ports:
+      - "1080:1080"  # Web interface
+      - "1025:1025"  # SMTP server
+    networks:
+      - cb_image_network
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  bundle_cache:
+    driver: local
+  node_modules:
+    driver: local
+
+networks:
+  cb_image_network:
+    driver: bridge
