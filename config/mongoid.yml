@@ -276,6 +276,18 @@ development:
     # validate_update_replace: false
 
 
+production:
+  clients:
+    default:
+      uri: <%= ENV['MONGODB_URI'] %>
+      options:
+        server_selection_timeout: 30
+        max_pool_size: 5
+        connect_timeout: 10
+        socket_timeout: 10
+        retry_writes: true
+        retry_reads: true
+
 test:
   clients:
     default:

@@ -3,19 +3,30 @@ module Api
     class SessionsController < BaseController
       # Devise helpers
       include Devise::Controllers::Helpers
-      
+
       before_action :authenticate_user!, only: [:destroy, :me]
 
       # POST /api/v1/login
       def create
-        user = User.find_by(email: params[:email])
+        email = params[:email] || params.dig(:session, :email)
+        password = params[:password] || params.dig(:session, :password)
 
-        if user&.valid_password?(params[:password])
+        unless email && password
+          return render_error('Email and password are required', :bad_request)
+        end
+
+        user = User.where(email: email).first
+
+        if user&.valid_password?(password)
           sign_in(:user, user)
           render_success(user_response(user), 'Logged in successfully')
         else
           render_error('Invalid email or password', :unauthorized)
         end
+      rescue => e
+        Rails.logger.error("Login error: #{e.message}")
+        Rails.logger.error(e.backtrace.join("\n"))
+        render_error("Login failed: #{e.message}", :internal_server_error)
       end
 
       # DELETE /api/v1/logout

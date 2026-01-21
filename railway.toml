@@ -1,0 +1,12 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "bundle exec rails server -b 0.0.0.0 -p ${PORT:-3000}"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[[healthchecks]]
+path = "/"
+timeout = 100
+interval = 30
