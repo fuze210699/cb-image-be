@@ -45,11 +45,8 @@ module CbImageBe
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
           credentials: true,
-          expose: ['Authorization']
+          expose: ['Authorization', 'Set-Cookie']  # Expose Set-Cookie header
       end
     end
-
-    # Session store configuration for API authentication
-    config.session_store :cookie_store, key: '_cb_image_session', same_site: :lax
   end
 end
