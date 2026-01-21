@@ -49,6 +49,9 @@ module CbImageBe
       end
     end
 
+    # Session expiry middleware
+    config.middleware.use "Api::V1::SessionExpiryMiddleware"
+
     # Session store configuration for API authentication
     config.session_store :cookie_store, key: '_cb_image_session', same_site: :lax
   end

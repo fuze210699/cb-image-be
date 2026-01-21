@@ -4,7 +4,7 @@
 
 Railway là platform deployment hiện đại, rất phù hợp với Rails + MongoDB:
 - ✅ Free tier $5 credit/tháng
-- ✅ Auto deploy từ GitHub  
+- ✅ Auto deploy từ GitHub
 - ✅ MongoDB tích hợp sẵn
 - ✅ Zero config, cực kỳ dễ dùng
 - ✅ Performance tốt từ VN
@@ -70,7 +70,7 @@ RAILS_LOG_TO_STDOUT=true
 RAILS_SERVE_STATIC_FILES=true
 ```
 
-**Lưu ý:** 
+**Lưu ý:**
 - `${{MongoDB.MONGO_URL}}` - Railway tự động replace bằng connection string
 - Hoặc dùng MongoDB Atlas: paste connection string vào `MONGODB_URI`
 
@@ -193,7 +193,7 @@ railway logs
 
 Dashboard → **Metrics** tab:
 - CPU usage
-- Memory usage  
+- Memory usage
 - Network traffic
 - Request count
 
@@ -232,7 +232,7 @@ Value: [Railway IP]
 
 **CNAME Record:**
 ```
-Type: CNAME  
+Type: CNAME
 Name: api
 Value: cb-image-be-production.up.railway.app
 ```
@@ -384,7 +384,7 @@ Không cần setup CI/CD riêng!
 ## ✅ Checklist
 
 - [ ] Railway account created
-- [ ] GitHub repo connected  
+- [ ] GitHub repo connected
 - [ ] MongoDB service added
 - [ ] Environment variables set
 - [ ] App deployed successfully

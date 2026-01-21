@@ -4,7 +4,21 @@ module Api
       # Devise helpers
       include Devise::Controllers::Helpers
 
-      before_action :authenticate_user!, only: [:destroy, :me]
+      before_action :authenticate_user!, only: [:destroy, :me, :ping]
+
+      # GET /api/v1/ping
+      # Check if session is still valid
+      def ping
+        render_success({
+          valid: true,
+          user: {
+            id: current_user.id.to_s,
+            email: current_user.email,
+            role: current_user.role
+          },
+          expires_at: session[:expires_at]
+        }, 'Session is valid')
+      end
 
       # POST /api/v1/login
       def create
@@ -19,6 +33,8 @@ module Api
 
         if user&.valid_password?(password)
           sign_in(:user, user)
+          # Set session expiry to 24 hours
+          session[:expires_at] = 24.hours.from_now.iso8601
           render_success(user_response(user), 'Logged in successfully')
         else
           render_error('Invalid email or password', :unauthorized)
