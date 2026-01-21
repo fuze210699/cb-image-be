@@ -152,7 +152,7 @@ async function checkSession() {
     const response = await fetch('https://cb-image-be-production.up.railway.app/api/v1/ping', {
       credentials: 'include'
     });
-    
+
     if (response.ok) {
       const data = await response.json();
       if (data.data.valid) {
@@ -174,7 +174,7 @@ setInterval(async () => {
   const response = await fetch('https://cb-image-be-production.up.railway.app/api/v1/ping', {
     credentials: 'include'
   });
-  
+
   if (!response.ok) {
     // Session expired → redirect to login
     window.location.href = '/login';
@@ -199,12 +199,12 @@ async function login(email, password) {
     credentials: 'include', // Important!
     body: JSON.stringify({ email, password })
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Login failed');
   }
-  
+
   return await response.json();
 }
 
@@ -213,9 +213,9 @@ async function getCurrentUser() {
   const response = await fetch(`${API_URL}/api/v1/me`, {
     credentials: 'include' // Important!
   });
-  
+
   if (!response.ok) throw new Error('Not authenticated');
-  
+
   return await response.json();
 }
 
@@ -288,7 +288,7 @@ function App() {
 
   useEffect(() => {
     checkAuth();
-    
+
     // Periodic session check (every 5 minutes)
     const interval = setInterval(checkAuth, 5 * 60 * 1000);
     return () => clearInterval(interval);
@@ -299,7 +299,7 @@ function App() {
       const response = await fetch(`${API_URL}/api/v1/ping`, {
         credentials: 'include'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.data.valid) {

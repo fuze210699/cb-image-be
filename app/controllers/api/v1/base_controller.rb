@@ -15,6 +15,17 @@ module Api
 
       private
 
+      # Override Devise's default redirect behavior for API
+      def authenticate_user!
+        unless current_user
+          render json: { 
+            success: false, 
+            message: 'Not authenticated' 
+          }, status: :unauthorized
+          return
+        end
+      end
+
       def not_found
         render json: { error: 'Resource not found' }, status: :not_found
       end

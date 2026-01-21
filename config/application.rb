@@ -39,7 +39,7 @@ module CbImageBe
     # CORS configuration for API
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'localhost:5173', '127.0.0.1:5173', 'cb-image.com', 'www.cb-image.com', 
+        origins 'http://localhost:5173', 'http://127.0.0.1:5173', 
                 'https://cb-image.com', 'https://www.cb-image.com'
         resource '/api/*',
           headers: :any,
