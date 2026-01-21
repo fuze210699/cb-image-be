@@ -1,9 +1,6 @@
 module Api
   module V1
     class SessionsController < BaseController
-      # Devise helpers
-      include Devise::Controllers::Helpers
-
       before_action :authenticate_user!, only: [:destroy, :me, :ping]
 
       # GET /api/v1/ping
@@ -32,7 +29,8 @@ module Api
         user = User.where(email: email).first
 
         if user&.valid_password?(password)
-          sign_in(:user, user)
+          # Set user_id in session for authentication
+          session[:user_id] = user.id.to_s
           # Set session expiry to 24 hours
           session[:expires_at] = 24.hours.from_now.iso8601
           render_success(user_response(user), 'Logged in successfully')
@@ -47,7 +45,8 @@ module Api
 
       # DELETE /api/v1/logout
       def destroy
-        signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+        session[:user_id] = nil
+        session[:expires_at] = nil
         render_success(nil, 'Logged out successfully')
       end
 

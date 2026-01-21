@@ -3,9 +3,6 @@ module Api
     class BaseController < ActionController::API
       include ActionController::Cookies
       
-      # Include Devise helpers
-      before_action :configure_permitted_parameters, if: :devise_controller?
-      
       # Set JSON response format
       respond_to :json
 
@@ -13,18 +10,31 @@ module Api
       rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found
       rescue_from CanCan::AccessDenied, with: :forbidden
 
-      private
+      protected
 
-      # Override Devise's default redirect behavior for API
+      # Override Devise's authenticate_user! to return JSON instead of redirect
       def authenticate_user!
-        unless current_user
+        unless user_signed_in?
           render json: { 
             success: false, 
             message: 'Not authenticated' 
           }, status: :unauthorized
-          return
         end
       end
+
+      # Helper method to get current user from session
+      def current_user
+        @current_user ||= User.find(session[:user_id]) if session[:user_id]
+      rescue Mongoid::Errors::DocumentNotFound
+        session[:user_id] = nil
+        nil
+      end
+
+      def user_signed_in?
+        current_user.present?
+      end
+
+      private
 
       def not_found
         render json: { error: 'Resource not found' }, status: :not_found
