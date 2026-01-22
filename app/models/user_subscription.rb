@@ -37,7 +37,7 @@ class UserSubscription
 
   def days_remaining
     return 0 if expired?
-    ((end_date - Time.current) / 1.day).to_i
+    ((end_date.to_time - Time.current) / 1.day).to_i
   end
 
   def cancel!
