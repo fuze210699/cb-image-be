@@ -35,6 +35,11 @@ class UserSubscription
     end_date <= Time.current
   end
 
+  def days_remaining
+    return 0 if expired?
+    ((end_date - Time.current) / 1.day).to_i
+  end
+
   def cancel!
     update(status: 'cancelled', auto_renew: false)
   end
