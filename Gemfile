@@ -21,7 +21,7 @@ gem "jbuilder"
 gem "mongoid", "~> 9.0"
 
 # Devise for authentication with Mongoid support
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 
 # CanCanCan for authorization
 gem "cancancan", "~> 3.5"
