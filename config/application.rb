@@ -1,4 +1,5 @@
 require_relative "boot"
+require 'rack/cors'
 
 require "rails"
 # Pick the frameworks you want:
@@ -37,7 +38,7 @@ module CbImageBe
     # config.eager_load_paths << Rails.root.join("extras")
 
     # CORS configuration for API
-    config.middleware.insert_before 0, Rack::Cors do
+    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
       allow do
         origins 'http://localhost:5173', 'http://127.0.0.1:5173', 
                 'https://cb-image.com', 'https://www.cb-image.com'
